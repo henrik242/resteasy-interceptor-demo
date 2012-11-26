@@ -40,7 +40,7 @@ The only difference from 1. is in the method signature:
 
 <h2>3. Get a resource without a username</h2>
 <ul>
-<li>FAIL: The MessageBodyReaderInterceptor doesn't trigger</li>
+<li>OK: The MessageBodyReaderInterceptor doesn't trigger, because the PreProcessorInterceptor has higher priority and throws an Exception</li>
 <li>OK: The PreProcessInterceptor triggers and throws a SecurityException</li>
 <li>OK: The exception is nicely formatted by MyExceptionMapper</li>
 </ul>
@@ -50,8 +50,8 @@ The only difference from 1. is in the method signature:
 <h2>4. Get a resource (with username) that throws an inner exception</h2>
 <ul>
 <li>FAIL: The MessageBodyReaderInterceptor doesn't trigger</li>
-<li>OK: The PreProcessInterceptor triggers</li>
-<li>OK: The result is nicely formatted by MyExceptionMapper</li>
+<li>OK: The PreProcessInterceptor triggers and doesn't throw an Exception</li>
+<li>OK: The service method throws an Exception, and it is nicely formatted by MyExceptionMapper</li>
 </ul>
 <a href="api/name/testing?username=john">Throw an exception</a>
 
