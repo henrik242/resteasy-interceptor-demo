@@ -1,5 +1,6 @@
 package no.synth.resteasyinterceptordemo;
 
+import org.apache.log4j.Logger;
 import org.jboss.resteasy.annotations.interception.ServerInterceptor;
 import org.jboss.resteasy.core.ResourceMethod;
 import org.jboss.resteasy.core.ServerResponse;
@@ -11,17 +12,15 @@ import org.jboss.resteasy.spi.interception.PreProcessInterceptor;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.ext.Provider;
 import java.lang.reflect.Method;
-import java.util.logging.Logger;
 
 @Provider
 @ServerInterceptor
 public class SecurityInterceptor implements PreProcessInterceptor, AcceptedByMethod {
-    private static final Logger log = Logger.getLogger(SecurityInterceptor.class.getName());
+    private static final Logger log = Logger.getLogger(SecurityInterceptor.class);
 
     @SuppressWarnings("rawtypes")
     public boolean accept(Class c, Method m) {
-        log.severe("SecurityInterceptor.accept()");
-        System.err.println("SecurityInterceptor.accept()");
+        log.info("SecurityInterceptor.accept()");
 
         // run on all methods
         return true;
@@ -29,8 +28,7 @@ public class SecurityInterceptor implements PreProcessInterceptor, AcceptedByMet
 
     public ServerResponse preProcess(HttpRequest request, ResourceMethod method)
             throws Failure, WebApplicationException {
-        log.severe("SecurityInterceptor.preProcess()");
-        System.err.println("SecurityInterceptor.preProcess()");
+        log.info("SecurityInterceptor.preProcess()");
 
         ServerResponse response = null;
 
@@ -46,9 +44,13 @@ public class SecurityInterceptor implements PreProcessInterceptor, AcceptedByMet
         }
         // very simple security validation
         if (username == null || username.isEmpty()) {
+            log.error("SecurityInterceptor throws 401");
+
             throw new Failure("To access this method you need to inform an username",
                     401);
         } else if (!"john".equals(username)) {
+            log.error("SecurityInterceptor throws 403");
+
             throw new Failure("User \"" + username
                     + "\" is not authorized to access this method.", 403);
         }

@@ -1,5 +1,6 @@
 package no.synth.resteasyinterceptordemo;
 
+import org.apache.log4j.Logger;
 import org.jboss.resteasy.spi.Failure;
 
 import javax.ws.rs.core.Context;
@@ -9,12 +10,11 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.ext.ExceptionMapper;
 import javax.ws.rs.ext.Provider;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.logging.Logger;
 
 @Provider
 public class MyExceptionMapper implements ExceptionMapper<java.lang.Exception> {
 
-    private static final Logger log = Logger.getLogger(MyExceptionMapper.class.getName());
+    private static final Logger log = Logger.getLogger(MyExceptionMapper.class);
 
     @Context
     private HttpHeaders headers;
@@ -35,6 +35,7 @@ public class MyExceptionMapper implements ExceptionMapper<java.lang.Exception> {
     }
 
     public Response toResponse(Exception exception) {
+        log.info("MyExceptionMapper.toResponse()");
         int status = 500;
         String message = exception.getMessage();
         if (exception instanceof Failure) {
